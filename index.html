@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="mricode.pagination.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="jquery-2.1.4.min.js"></script>
+    <script src="mricode.pagination.js"></script>
+</head>
+<body class="container">
+	<div class="row">
+		<h2>Nyaa</h2>
+	</div>
+    <fieldset class="row">    
+        <form class="col-md-6 col-md-offset-3">
+            <div class="input-group">
+            	<input type="text" name="name"  class="form-control" />
+            	<div class="input-group-btn">
+            		<button id="btn_search" type="button" class="btn btn-default">搜索</button>
+            	</div>
+            </div>
+        </form>
+    </fieldset>
+
+
+    <div class="row" style="margin-top:50px ">
+    	<table class="table myinfo">
+    		
+    	</table>
+    	<div id="page" class="m-pagination"></div>
+    </div>
+    <script>
+            
+            $("#page").pagination({//初始化
+                pageIndex: 0,
+                pageSize: 10,
+                total: 100,
+                debug: true,
+                showInfo: true,
+                showJump: true,
+                showPageSizes: true,
+                loadFirstPage: true,
+                remote: {
+                    url: 'index.php',
+                    params: $('form').serializeArray(),
+                    success: function (data) {
+                        //$("#eventLog").append(' remote callback : ' + JSON.stringify(data) + '<br />');
+                        table(data.list);
+
+                    }
+                }
+            });
+
+        btn_search.onclick = function () {
+            //var url = 'data.json';
+            //$("#page").pagination('setRemoteUrl', url);
+            $("#page").pagination('setPageIndex', 0);
+            $("#page").pagination('setPageSize', 10);
+            $("#page").pagination('setParams', $('form').serializeArray());
+            $("#page").pagination('remote');
+            //alert('搜索：$("XXX").pagination("remote")');
+        }
+        function table(data){
+        	$(".table").html("");
+        	var trh=$("<tr><th>类型</th><th>名字</th><th>种子</th><th>磁链</th><th>大小</th><th>日期</th></tr>");
+        	trh.appendTo(".myinfo");
+
+        	for(x in data){
+        		var xdata=data[x];
+        		var tr=$("<tr></tr>");
+	        	var td_1=$("<td>"+xdata.type+"</td>");
+	        	var td_2=$("<td>"+xdata.name+"</td>");
+	        	var td_3=$("<td><a href='https://nyaa.si"+xdata.torrent+"'><span class='glyphicon glyphicon-arrow-down'></span></a></td>");
+	        	var td_4=$("<td><a href='"+xdata.magnet+"'><span class='glyphicon glyphicon-magnet'></span></a></td>");
+	        	var td_5=$("<td>"+xdata.size+"</td>");
+	        	var td_6=$("<td>"+xdata.date+"</td>");
+	        	td_1.appendTo(tr);
+	        	td_2.appendTo(tr);
+	        	td_3.appendTo(tr);
+	        	td_4.appendTo(tr);
+	        	td_5.appendTo(tr);
+	        	td_6.appendTo(tr);
+	        	tr.appendTo(".myinfo");
+        	}
+
+	        	
+
+        }
+
+        // $("#page").on("pageClicked", function (event, data) {
+        //     $("#eventLog").append('EventName = pageClicked , pageIndex = ' + data.pageIndex + '<br />');
+        // }).on('jumpClicked', function (event, data) {
+        //     $("#eventLog").append('EventName = jumpClicked , pageIndex = ' + data.pageIndex + '<br />');
+        // }).on('pageSizeChanged', function (event, data) {
+        //     $("#eventLog").append('EventName = pageSizeChanged , pageSize = ' + data.pageSize + '<br />');
+        // });
+    </script>
+</body>
+</html>
