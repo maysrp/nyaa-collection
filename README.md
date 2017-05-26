@@ -1,0 +1,2 @@
+# nyaa-collection
+nyaa-collection
